@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate PDF Certificate</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative; /* Add to position the certificate background */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label, input, button {
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        h1, h2 {
+            color: #007BFF;
+        }
+
+        .certificate {
+            margin-top: 50px;
+            border: 2px solid #007BFF;
+            padding: 20px;
+            background-color: #f9f9f9; /* Background color for the certificate */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1; /* Ensure it's behind the content */
+        }
+
+        /* Formal designs */
+        .formal-design {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(45deg, #007BFF, #0056b3);
+            opacity: 0.2;
+            z-index: -2; /* Ensure it's behind the certificate and content */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="formal-design"></div> <!-- Add formal design -->
+        <h1>Generate Your Certificate</h1>
+        <form id="certificateForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        window.jsPDF = window.jspdf.jsPDF;
+
+        window.onload = function() {
+            document.getElementById('certificateForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+        
+                const name = document.getElementById('name').value;
+                if (!name) {
+                    alert('Please enter your name.');
+                    return;
+                }
+        
+                generateCertificate(name);
+            });
+        
+            function generateCertificate(name) {
+                const doc = new jsPDF();
+                doc.setFontSize(30);
+                doc.text('CERTIFICATE OF COMPLETION', 105, 30, { align: 'center' });
+                doc.setFontSize(16);
+                doc.text(`This is to certify that ${name} has successfully completed the course.`, 105,80, {align: 'center'});
+                doc.setFontSize(14);
+                doc.text('Date: ' + new Date().toLocaleDateString(), 50, 50, {align: 'left'});
+                // Add additional information if needed
+
+                // Add a border around the certificate
+                doc.rect(20, 20, 170, 100);
+        
+                doc.save(`${name}_Certificate.pdf`);
+            }
+        };
+    </script>
+</body>
+</html>
